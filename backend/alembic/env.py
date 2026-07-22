@@ -3,6 +3,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
+# Garante que todos os models sejam registrados em Base.metadata antes do autogenerate.
+from app import models  # noqa: F401
 from app.core.config import settings
 from app.db.base import Base
 
