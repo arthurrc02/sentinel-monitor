@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     app_name: str = "Sentinel Backend"
     version: str = "0.1.0"
     database_url: str = "postgresql+psycopg://sentinel:sentinel@localhost:5432/sentinel"
+    cors_origins: list[str] = ["http://localhost:5173"]
 
 
 settings = Settings()
