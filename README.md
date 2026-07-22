@@ -14,13 +14,22 @@ Monorepo com três aplicações independentes:
 |---|---|---|
 | [`agent/`](agent/) | Python + uv | Coleta métricas da máquina monitorada e as envia ao backend. |
 | [`backend/`](backend/) | FastAPI + SQLAlchemy + Alembic + uv | Recebe, persiste (PostgreSQL) e expõe métricas via API REST. |
-| [`frontend/`](frontend/) | React + Vite + TypeScript | Dashboard web que consome a API e exibe as métricas. |
+| [`frontend/`](frontend/) | React + Vite + TypeScript + Tailwind CSS | Dashboard web que consome a API e exibe as métricas. |
 
 Fluxo de dados: **Agent → Backend (ingestão) → PostgreSQL → Backend (consulta) → Frontend**.
 
 O PostgreSQL usado em desenvolvimento roda via [`docker-compose.yml`](docker-compose.yml) na raiz do monorepo.
 
 Cada aplicação possui seu próprio `README.md` com instruções de instalação e execução.
+
+## Documentação
+
+- [Arquitetura](docs/architecture.md)
+- [Roadmap](docs/roadmap.md)
+- [API](docs/api.md)
+- [Decisões técnicas](docs/decisions.md)
+- [Setup](docs/setup.md)
+- [Diagrama de fluxo](docs/diagrams/system-flow.md)
 
 ## Qualidade
 
@@ -35,4 +44,4 @@ Distribuído sob a licença [MIT](LICENSE).
 
 ## Status
 
-Estrutura base definida: cada aplicação com seu esqueleto (`/health` no backend, placeholders no agent e frontend), conexão SQLAlchemy e Alembic configurados no backend, PostgreSQL disponível via Docker Compose, e infraestrutura de qualidade (lint, tipagem estática, testes, CI) configurada nas três aplicações. Ainda não há nenhum model, migration, endpoint de métricas ou coleta real — isso é o escopo da Sprint 1.
+**Fase 3 concluída**: as três aplicações já funcionam de ponta a ponta — o Agent coleta CPU/memória/disco e envia periodicamente para o backend (com retry e backoff exponencial), o backend persiste em PostgreSQL e expõe a API, e o dashboard React exibe os dados. Ver [roadmap](docs/roadmap.md).

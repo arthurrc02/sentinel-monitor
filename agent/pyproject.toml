@@ -4,13 +4,17 @@ version = "0.1.0"
 description = "Agente coletor de métricas de infraestrutura do Sentinel"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "psutil>=7.2.2",
+    "pydantic-settings>=2.14.2",
+]
 
 [project.scripts]
 sentinel-agent = "sentinel_agent.main:main"
 
 [dependency-groups]
-dev = ["ruff>=0.6", "mypy>=1.13", "pytest>=8.3"]
+dev = ["ruff>=0.6", "mypy>=1.13", "pytest>=8.3", "types-psutil>=7.0"]
 
 [build-system]
 requires = ["hatchling"]
@@ -25,6 +29,9 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sentinel_agent"]
 
 [tool.mypy]
 strict = true

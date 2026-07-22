@@ -9,6 +9,7 @@ dist/
 # Node
 node_modules/
 frontend/dist/
+*.tsbuildinfo
 
 # Env
 .env
