@@ -10,7 +10,7 @@ dependencies = []
 sentinel-agent = "sentinel_agent.main:main"
 
 [dependency-groups]
-dev = ["ruff>=0.6"]
+dev = ["ruff>=0.6", "mypy>=1.13", "pytest>=8.3"]
 
 [build-system]
 requires = ["hatchling"]
@@ -25,3 +25,10 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+strict = true
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

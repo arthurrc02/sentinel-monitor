@@ -22,6 +22,17 @@ O PostgreSQL usado em desenvolvimento roda via [`docker-compose.yml`](docker-com
 
 Cada aplicação possui seu próprio `README.md` com instruções de instalação e execução.
 
+## Qualidade
+
+- **Lint**: [ruff](https://docs.astral.sh/ruff/) (Python) e [ESLint](https://eslint.org/) (TypeScript).
+- **Tipagem estática**: [mypy](https://mypy-lang.org/) em modo strict (agent e backend) e `tsc` (frontend).
+- **Testes**: [pytest](https://docs.pytest.org/) (agent e backend).
+- **CI**: [GitHub Actions](.github/workflows/ci.yml) roda lint, typecheck e testes das três aplicações a cada push/PR.
+
+## Licença
+
+Distribuído sob a licença [MIT](LICENSE).
+
 ## Status
 
-Estrutura base definida: cada aplicação com seu esqueleto (`/health` no backend, placeholders no agent e frontend), conexão SQLAlchemy e Alembic configurados no backend, e PostgreSQL disponível via Docker Compose. Ainda não há nenhum model, migration, endpoint de métricas ou coleta real — isso é o escopo da Sprint 1.
+Estrutura base definida: cada aplicação com seu esqueleto (`/health` no backend, placeholders no agent e frontend), conexão SQLAlchemy e Alembic configurados no backend, PostgreSQL disponível via Docker Compose, e infraestrutura de qualidade (lint, tipagem estática, testes, CI) configurada nas três aplicações. Ainda não há nenhum model, migration, endpoint de métricas ou coleta real — isso é o escopo da Sprint 1.

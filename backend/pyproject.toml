@@ -14,7 +14,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["ruff>=0.6"]
+dev = ["ruff>=0.6", "mypy>=1.13", "pytest>=8.3", "httpx>=0.27"]
 
 [build-system]
 requires = ["hatchling"]
@@ -29,3 +29,10 @@ src = ["app"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+strict = true
+files = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

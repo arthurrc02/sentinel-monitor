@@ -44,9 +44,16 @@ uv run uvicorn app.main:app --reload
 
 A API estará disponível em `http://localhost:8000`. Documentação interativa em `http://localhost:8000/docs`.
 
-## Lint
+## Lint e tipagem
 
 ```bash
 uv run ruff check .
 uv run ruff format .
+uv run mypy .
+```
+
+## Testes
+
+```bash
+uv run pytest
 ```

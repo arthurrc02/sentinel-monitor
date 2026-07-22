@@ -21,9 +21,16 @@ uv sync
 uv run sentinel-agent
 ```
 
-## Lint
+## Lint e tipagem
 
 ```bash
 uv run ruff check .
 uv run ruff format .
+uv run mypy .
+```
+
+## Testes
+
+```bash
+uv run pytest
 ```
