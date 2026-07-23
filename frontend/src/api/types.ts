@@ -2,6 +2,8 @@ export interface Computer {
   id: number;
   hostname: string;
   created_at: string;
+  last_seen_at: string | null;
+  is_online: boolean;
 }
 
 export interface Metric {

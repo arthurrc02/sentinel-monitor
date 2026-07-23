@@ -24,7 +24,7 @@ uv run alembic upgrade head
 uv run uvicorn app.main:app --reload
 ```
 
-API em `http://localhost:8000` (documentação interativa em `/docs`).
+API em `http://localhost:8000` (documentação interativa em `/docs`). `SENTINEL_OFFLINE_THRESHOLD_SECONDS` (padrão 120) controla a partir de quantos segundos sem métrica um computador aparece como offline.
 
 ## 3. Frontend
 
@@ -35,7 +35,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Dashboard em `http://localhost:5173`.
+Dashboard em `http://localhost:5173`. Atualiza sozinho por polling (intervalo configurável na própria tela, padrão 10s) — não precisa recarregar a página para ver dados novos.
 
 ## 4. Agent
 

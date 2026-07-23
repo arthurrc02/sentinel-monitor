@@ -29,19 +29,35 @@ Registra um computador.
 **Resposta `201`**
 
 ```json
-{ "id": 1, "hostname": "pc-01", "created_at": "2026-07-22T10:00:00Z" }
+{
+  "id": 1,
+  "hostname": "pc-01",
+  "created_at": "2026-07-22T10:00:00Z",
+  "last_seen_at": null,
+  "is_online": false
+}
 ```
 
 **Erros**: `409` se o `hostname` já estiver registrado.
 
 ### `GET /computers`
 
-Lista os computadores registrados.
+Lista os computadores registrados, com status calculado no momento da consulta.
+
+`last_seen_at` é o `collected_at` da métrica mais recente do computador (`null` se nunca reportou). `is_online` é `true` se `last_seen_at` está dentro de `SENTINEL_OFFLINE_THRESHOLD_SECONDS` (padrão 120s) a contar de agora.
 
 **Resposta `200`**
 
 ```json
-[{ "id": 1, "hostname": "pc-01", "created_at": "2026-07-22T10:00:00Z" }]
+[
+  {
+    "id": 1,
+    "hostname": "pc-01",
+    "created_at": "2026-07-22T10:00:00Z",
+    "last_seen_at": "2026-07-22T10:04:30Z",
+    "is_online": true
+  }
+]
 ```
 
 ## Métricas

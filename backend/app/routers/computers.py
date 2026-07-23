@@ -14,5 +14,14 @@ def register_computer(data: ComputerCreate, service: ComputerServiceDep) -> Comp
 
 @router.get("", response_model=list[ComputerRead])
 def list_computers(service: ComputerServiceDep) -> list[ComputerRead]:
-    computers = service.list_computers()
-    return [ComputerRead.model_validate(computer) for computer in computers]
+    computer_statuses = service.list_computers()
+    return [
+        ComputerRead(
+            id=computer_status.computer.id,
+            hostname=computer_status.computer.hostname,
+            created_at=computer_status.computer.created_at,
+            last_seen_at=computer_status.last_seen_at,
+            is_online=computer_status.is_online,
+        )
+        for computer_status in computer_statuses
+    ]

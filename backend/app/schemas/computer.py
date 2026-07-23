@@ -17,3 +17,5 @@ class ComputerRead(BaseModel):
     id: int
     hostname: str
     created_at: datetime
+    last_seen_at: datetime | None = None
+    is_online: bool = False

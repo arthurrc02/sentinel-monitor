@@ -1,7 +1,10 @@
-from sqlalchemy import select
+from datetime import datetime
+
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models.computer import Computer
+from app.models.metric import Metric
 
 
 class ComputerRepository:
@@ -23,5 +26,16 @@ class ComputerRepository:
     def get_by_hostname(self, hostname: str) -> Computer | None:
         return self._db.scalar(select(Computer).where(Computer.hostname == hostname))
 
-    def list_all(self) -> list[Computer]:
-        return list(self._db.scalars(select(Computer).order_by(Computer.hostname)))
+    def list_all_with_last_seen(self) -> list[tuple[Computer, datetime | None]]:
+        """Cada computador junto com o `collected_at` da métrica mais recente (ou `None`)."""
+        last_seen_subquery = (
+            select(Metric.computer_id, func.max(Metric.collected_at).label("last_seen_at"))
+            .group_by(Metric.computer_id)
+            .subquery()
+        )
+        statement = (
+            select(Computer, last_seen_subquery.c.last_seen_at)
+            .outerjoin(last_seen_subquery, Computer.id == last_seen_subquery.c.computer_id)
+            .order_by(Computer.hostname)
+        )
+        return list(self._db.execute(statement).tuples())

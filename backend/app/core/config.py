@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     version: str = "0.1.0"
     database_url: str = "postgresql+psycopg://sentinel:sentinel@localhost:5432/sentinel"
     cors_origins: list[str] = ["http://localhost:5173"]
+    offline_threshold_seconds: int = 120
 
 
 settings = Settings()

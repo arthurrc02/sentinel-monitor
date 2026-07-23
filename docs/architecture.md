@@ -35,19 +35,25 @@ Router (HTTP) → Service (regra de negócio) → Repository (SQLAlchemy) → Mo
 
 CORS liberado para a origem do frontend em desenvolvimento (`http://localhost:5173`), configurável via `SENTINEL_CORS_ORIGINS`.
 
+### Status online/offline
+
+`GET /computers` calcula, a cada chamada, `last_seen_at` (timestamp da métrica mais recente do computador, via `JOIN` com `MAX(collected_at)` em `app/repositories/computer_repository.py`) e `is_online` (`last_seen_at` dentro de `SENTINEL_OFFLINE_THRESHOLD_SECONDS`, calculado em `app/services/computer_service.py`). Nenhum dado é armazenado a mais — é sempre recalculado na leitura, então nunca fica desatualizado.
+
 ## Frontend
 
 ```
-Route (React Router) → Page → Hook (React Query) → api/ (fetch) → Backend
+Route (React Router) → Page → Hook (React Query, com polling) → api/ (fetch) → Backend
                           ↓
                     Componentes (layout / domínio / feedback)
 ```
 
 - `src/api/`: única camada que conhece o formato HTTP da API.
-- `src/hooks/`: hooks de React Query que encapsulam as chamadas de `api/`.
-- `src/components/`: `layout/` (AppLayout, Sidebar, Header), `computers/`, `metrics/`, `feedback/` (estados de loading/erro/vazio).
-- `src/pages/`: páginas roteadas (`DashboardPage`, `ComputerDetailPage`).
+- `src/hooks/`: `useComputers`/`useMetricHistory` (React Query com `refetchInterval`) e `usePollingInterval` (preferência do usuário, persistida em `localStorage`, compartilhada entre páginas).
+- `src/components/`: `layout/` (AppLayout, Sidebar, Header), `computers/` (lista, card, badge de status, skeleton), `metrics/` (tabela de histórico e seu skeleton), `feedback/` (`Skeleton`, `ErrorState`, `EmptyState`), `common/` (`PollingIntervalSelect`, reusado entre páginas).
+- `src/pages/`: páginas roteadas (`DashboardPage` — busca e ordenação client-side sobre a lista já carregada; `ComputerDetailPage`).
+- `src/lib/`: utilitários compartilhados (`formatDate`, `formatRelativeTime`, `pollingIntervals`).
 - Estilização com Tailwind CSS v4 (via `@tailwindcss/vite`), sem sistema de design customizado.
+- Atualização automática via polling (não WebSocket/SSE): cada página busca dados novos no intervalo escolhido pelo usuário; o carregamento inicial mostra skeletons, atualizações em segundo plano mostram só um indicador sutil no cabeçalho, sem substituir o conteúdo já exibido.
 
 ## Agent
 

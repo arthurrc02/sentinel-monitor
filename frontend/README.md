@@ -2,7 +2,7 @@
 
 Dashboard web para visualização das métricas coletadas pelo Sentinel: lista de computadores registrados e histórico de métricas de cada um.
 
-> Status: Fase 2 concluída. Dashboard consumindo a API real (React Query), com listagem de computadores e página de detalhe/histórico de métricas.
+> Status: Fase 4 concluída. Dashboard consumindo a API real (React Query) com atualização automática por polling, status online/offline, busca/ordenação e estados de carregamento/erro tratados.
 
 ## Requisitos
 
@@ -36,17 +36,20 @@ A aplicação estará disponível em `http://localhost:5173`.
 ```
 src/
   api/          cliente HTTP e funções de acesso à API (única camada que conhece o formato HTTP)
-  hooks/        hooks de React Query que encapsulam as chamadas de api/
+  hooks/        useComputers/useMetricHistory (React Query + polling), usePollingInterval
   components/
     layout/     AppLayout, Sidebar, Header
-    computers/  ComputerCard, ComputerList
-    metrics/    MetricHistoryTable
-    feedback/   LoadingState, ErrorState, EmptyState
-  pages/        DashboardPage (/), ComputerDetailPage (/computers/:id)
-  lib/          utilitários compartilhados (ex.: formatação de data)
+    computers/  ComputerCard, ComputerList (+ skeleton), ComputerStatusBadge
+    metrics/    MetricHistoryTable (+ skeleton)
+    feedback/   Skeleton, ErrorState, EmptyState
+    common/     PollingIntervalSelect (reusado entre páginas)
+  pages/        DashboardPage (/, com busca e ordenação), ComputerDetailPage (/computers/:id)
+  lib/          utilitários compartilhados (formatação de data/hora relativa, opções de polling)
   router.tsx        definição das rotas
   queryClient.ts    instância do QueryClient
 ```
+
+O dashboard atualiza sozinho por polling — o intervalo é escolhido pelo usuário (seletor no topo de cada página) e persiste entre navegações via `localStorage`.
 
 ## Lint e build
 

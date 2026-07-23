@@ -11,7 +11,15 @@ export class ApiError extends Error {
 }
 
 export async function apiGet<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`);
+  } catch {
+    throw new ApiError(
+      0,
+      "Não foi possível conectar à API. Verifique se o backend está em execução.",
+    );
+  }
 
   if (!response.ok) {
     const body: unknown = await response.json().catch(() => null);

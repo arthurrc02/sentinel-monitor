@@ -53,3 +53,23 @@ O Agent faz uma coisa por vez (coleta → envia → aguarda), sem concorrência 
 ## Logs estruturados em JSON via `logging.Formatter` customizado
 
 Sem adicionar `structlog` ou similar — um `Formatter` que serializa cada registro como uma linha JSON (com `ensure_ascii=True`, para não depender da codificação do terminal/redirecionamento) já atende à necessidade do Agent.
+
+## Status online/offline calculado na leitura, não armazenado
+
+`GET /computers` computa `last_seen_at`/`is_online` a cada chamada (`JOIN` com `MAX(collected_at)` por computador) em vez de gravar isso como coluna. Evita escrita extra a cada métrica recebida e evita o dado "envelhecer" (ficar online indefinidamente por engano caso algo falhe em atualizar uma coluna). Sem migration nova.
+
+## Regra de offline parametrizável (`SENTINEL_OFFLINE_THRESHOLD_SECONDS`)
+
+Um computador é considerado offline se não há métrica dentro dessa janela (padrão 120s = 2× o intervalo padrão do Agent). É uma configuração do backend, não do Agent — o backend não sabe o intervalo de coleta configurado em cada Agent, então usa sua própria tolerância independente.
+
+## Busca e ordenação de computadores são client-side
+
+A lista de computadores já vem inteira para o frontend a cada poll; filtrar/ordenar em memória no `DashboardPage` evita crescer a API (novos query params) para uma necessidade que a escala atual não justifica.
+
+## Intervalo de polling é preferência do usuário, persistida em `localStorage`
+
+Hook `usePollingInterval` (frontend), compartilhado entre `DashboardPage` e `ComputerDetailPage` — escolher "10s" em uma tela mantém a escolha ao navegar para a outra. Sem WebSocket/SSE: o requisito desta fase é polling.
+
+## Erros de rede do frontend viram `ApiError` amigável
+
+`api/client.ts` captura falha do `fetch` (backend inacessível) e lança uma `ApiError` com mensagem em português, em vez de propagar a mensagem crua do navegador (ex.: "Failed to fetch").

@@ -44,4 +44,4 @@ Distribuído sob a licença [MIT](LICENSE).
 
 ## Status
 
-**Fase 3 concluída**: as três aplicações já funcionam de ponta a ponta — o Agent coleta CPU/memória/disco e envia periodicamente para o backend (com retry e backoff exponencial), o backend persiste em PostgreSQL e expõe a API, e o dashboard React exibe os dados. Ver [roadmap](docs/roadmap.md).
+**Fase 4 concluída**: as três aplicações funcionam de ponta a ponta e o dashboard se atualiza sozinho — o Agent coleta CPU/memória/disco e envia periodicamente (com retry e backoff exponencial), o backend calcula e expõe o status online/offline de cada computador, e o frontend atualiza a tela automaticamente por polling (intervalo configurável), com busca, ordenação e estados de carregamento/erro tratados. Ver [roadmap](docs/roadmap.md).

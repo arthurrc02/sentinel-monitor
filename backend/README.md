@@ -2,7 +2,7 @@
 
 API responsável por receber métricas do Sentinel Agent, persisti-las (PostgreSQL) e disponibilizá-las para o frontend.
 
-> Status: Fase 1 concluída. Cadastro de computadores e ingestão/consulta de métricas funcionando, com persistência em PostgreSQL via SQLAlchemy + Alembic.
+> Status: Fase 4 concluída. Cadastro de computadores, ingestão/consulta de métricas e cálculo de status online/offline, com persistência em PostgreSQL via SQLAlchemy + Alembic.
 
 ## Requisitos
 
@@ -50,7 +50,7 @@ A API estará disponível em `http://localhost:8000`. Documentação interativa 
 |---|---|---|
 | GET | `/health` | Verifica se a API está no ar |
 | POST | `/computers` | Registra um computador |
-| GET | `/computers` | Lista os computadores registrados |
+| GET | `/computers` | Lista os computadores registrados, com `last_seen_at`/`is_online` calculados na hora |
 | POST | `/computers/{id}/metrics` | Registra uma amostra de métricas para um computador |
 | GET | `/computers/{id}/metrics` | Consulta o histórico de métricas de um computador (aceita `?limit=`, padrão 100, máx. 1000) |
 
