@@ -1,0 +1,21 @@
+flowchart TD
+    Router["React Router<br/>(/ e /computers/:id)"]
+    Page["Page<br/>(DashboardPage / ComputerDetailPage)"]
+    PollingHook["usePollingInterval<br/>(localStorage, compartilhado entre páginas)"]
+    DataHook["useComputers / useMetricHistory<br/>(React Query + refetchInterval)"]
+    Api["api/<br/>(fetch — único lugar que conhece o formato HTTP)"]
+    Backend[("Backend FastAPI")]
+    Components["Componentes<br/>(layout / computers / metrics / feedback)"]
+    States["Skeleton (1ª carga) · ErrorState · EmptyState<br/>indicador sutil de atualização em segundo plano"]
+
+    Router --> Page
+    Page --> PollingHook
+    PollingHook -->|"intervalo escolhido"| DataHook
+    DataHook --> Api
+    Api -->|"GET /computers<br/>GET /computers/{id}/metrics"| Backend
+    Backend --> Api
+    Api --> DataHook
+    DataHook -.a cada refetchInterval.-> DataHook
+    DataHook --> Page
+    Page --> Components
+    Components --> States

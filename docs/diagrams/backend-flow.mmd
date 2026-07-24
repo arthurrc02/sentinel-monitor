@@ -1,0 +1,25 @@
+flowchart TD
+    Client["Agent / Frontend"]
+    Router["Router<br/>(FastAPI — sem lógica de negócio)"]
+    Schema["Schema<br/>(Pydantic — valida entrada/saída)"]
+    Service["Service<br/>(regra de negócio, exceções de domínio)"]
+    Repository["Repository<br/>(única camada que fala SQLAlchemy)"]
+    Model["Model<br/>(ORM: Computer, Metric)"]
+    DB[("PostgreSQL")]
+    Handler["Exception handlers<br/>(exceção de domínio → HTTP 404/409)"]
+    Logging["logging_config<br/>(JSON estruturado)"]
+
+    Client -->|"HTTP request"| Router
+    Router --> Schema
+    Schema -->|"dados validados"| Service
+    Service --> Repository
+    Repository --> Model
+    Model --> DB
+    DB --> Model
+    Model --> Repository
+    Repository -->|"IntegrityError em corrida de registro"| Service
+    Service -->|"ComputerAlreadyExistsError / ComputerNotFoundError"| Handler
+    Handler -->|"resposta HTTP"| Client
+    Service -->|"resposta OK"| Router
+    Router -->|"HTTP response"| Client
+    Service -.evento de negócio.-> Logging

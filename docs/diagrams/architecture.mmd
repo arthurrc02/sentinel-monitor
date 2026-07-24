@@ -1,0 +1,10 @@
+flowchart LR
+    Agent["Agent<br/>(coleta CPU/memória/disco)"]
+    Backend["Backend FastAPI"]
+    DB[("PostgreSQL")]
+    Frontend["Frontend React"]
+
+    Agent -->|"POST /computers<br/>POST /computers/{id}/metrics"| Backend
+    Backend --> DB
+    DB --> Backend
+    Backend -->|"GET /computers<br/>GET /computers/{id}/metrics"| Frontend

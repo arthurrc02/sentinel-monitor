@@ -2,6 +2,17 @@
 
 Guia rápido para rodar o Sentinel localmente. Cada aplicação também tem instruções detalhadas no seu próprio `README.md`.
 
+## Atalho
+
+Os passos 1–3 abaixo (banco, backend, frontend) podem ser feitos de uma vez com os scripts em [`scripts/`](../scripts/):
+
+```bash
+./scripts/setup.sh && ./scripts/run-all.sh      # Linux/Mac
+.\scripts\setup.ps1; .\scripts\run-all.ps1       # Windows (PowerShell)
+```
+
+`setup` instala as dependências das três aplicações e cria os `.env` a partir dos `.env.example`. `run-all` sobe o Postgres, aplica as migrations e inicia backend + frontend (o Agent não sobe junto por padrão — ver seção 4). No Git Bash para Windows, prefira `run-all.ps1`: o `.sh` usa recursos de grupo de processos que o Git Bash não emula por completo.
+
 ## Requisitos
 
 - Python 3.11+ e [uv](https://docs.astral.sh/uv/)

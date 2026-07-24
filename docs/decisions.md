@@ -101,3 +101,19 @@ Até a Fase 4, o frontend era a única das três aplicações sem nenhum teste a
 ## `eslint-plugin-jsx-a11y` no frontend
 
 Acessibilidade vinha sendo revisada manualmente a cada fase; o plugin adiciona verificação automática nas revisões seguintes.
+
+## Diagramas Mermaid em arquivos `.mmd` separados, com PNG versionado
+
+Cada aplicação ganhou seu próprio diagrama (`architecture.mmd`, `backend-flow.mmd`, `agent-flow.mmd`, `frontend-flow.mmd`) em vez de um único bloco Mermaid solto em `system-flow.md`. Os `.mmd` são renderizados nativamente pelo GitHub; o PNG de cada um também foi gerado (via `npx @mermaid-js/mermaid-cli`) e versionado, para funcionar em qualquer lugar que não renderize Mermaid (ex.: o README).
+
+## Scripts `setup`/`run-all` em vez de Makefile
+
+`make` não é nativo no Windows — exigiria mais uma instalação para quem for rodar o projeto. Os scripts `.ps1`/`.sh` cobrem a mesma necessidade (onboarding com um comando) sem essa dependência extra.
+
+## `run-all.sh` usa `set -m` + kill de grupo de processos
+
+Descoberto testando o script de verdade: matar só o PID do `uv run uvicorn --reload`/`npm run dev` não derruba os processos filhos reais (o worker do reload, o vite) — eles ficam presos na porta. `set -m` (job control) coloca cada serviço em background no seu próprio grupo de processos, e o cleanup manda o sinal pro grupo inteiro (`kill -- -$pid`), não só pro processo raiz. No Git Bash para Windows especificamente essa limpeza pode não pegar tudo, porque lá os processos são processos Win32 nativos sem grupo POSIX de verdade — por isso o script recomenda `run-all.ps1` no Windows (testado e confiável nesse ambiente).
+
+## `CONTRIBUTING.md` curto, sem processo burocrático
+
+Cobre só o que importa para abrir um PR sem fricção: como rodar, checklist de qualidade por aplicação, padrão de commits (Conventional Commits, já usado no histórico do projeto). Nada de template de issue elaborado ou processo de governança — desproporcional para o tamanho do projeto.

@@ -10,7 +10,7 @@ export function Header({ title, onToggleNav, isRefreshing = false }: HeaderProps
       <button
         type="button"
         onClick={onToggleNav}
-        className="rounded-md p-2 text-slate-600 hover:bg-slate-100 md:hidden"
+        className="rounded-md p-2 text-slate-600 transition-colors hover:bg-slate-100 md:hidden"
         aria-label="Abrir menu de navegação"
       >
         <svg

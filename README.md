@@ -1,8 +1,18 @@
-# Sentinel
+<p align="center">
+  <img src="docs/banner.svg" alt="Sentinel — plataforma de monitoramento de infraestrutura" width="100%" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/arthurrc02/sentinel-monitor/actions/workflows/ci.yml"><img src="https://github.com/arthurrc02/sentinel-monitor/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="Licença MIT" /></a>
+  <img src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white" alt="Python 3.11+" />
+  <img src="https://img.shields.io/badge/typescript-5.6-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/postgresql-16-4169E1?logo=postgresql&logoColor=white" alt="PostgreSQL" />
+</p>
 
 Sentinel é uma plataforma de monitoramento de infraestrutura: um agente coleta métricas de máquinas, uma API centraliza e persiste esses dados, e um dashboard web exibe tudo em tempo real — com atualização automática, status online/offline e busca.
 
-**Status atual: Release Candidate 1.0** (Fase 5 concluída). As três aplicações funcionam de ponta a ponta. Ver [roadmap](#roadmap) para o histórico completo.
+**Status atual: Release Candidate 1.0.** As três aplicações funcionam de ponta a ponta. Ver [Roadmap](#roadmap) para o histórico completo.
 
 ## Tecnologias
 
@@ -26,11 +36,20 @@ Agent (coleta) → Backend (ingestão + regra de negócio) → PostgreSQL → Ba
 - **Backend**: FastAPI em camadas (`routers` → `services` → `repositories` → `models`), persistência em PostgreSQL via SQLAlchemy/Alembic, calcula o status online/offline de cada computador na leitura.
 - **Frontend**: React consumindo a API via React Query, com polling configurável para atualização automática — sem WebSocket/SSE.
 
-Diagrama completo do fluxo: [`docs/diagrams/system-flow.md`](docs/diagrams/system-flow.md). Detalhes de cada camada: [`docs/architecture.md`](docs/architecture.md).
+Diagramas completos (visão geral + fluxo interno de cada aplicação, em Mermaid): [`docs/diagrams/`](docs/diagrams/). Detalhes de cada camada: [`docs/architecture.md`](docs/architecture.md).
 
 ## Como executar
 
 Requisitos: Python 3.11+ com [uv](https://docs.astral.sh/uv/), Node.js 20+, [Docker](https://www.docker.com/).
+
+Atalho com os scripts prontos (instala tudo e sobe Postgres + backend + frontend):
+
+```bash
+./scripts/setup.sh && ./scripts/run-all.sh      # Linux/Mac
+.\scripts\setup.ps1; .\scripts\run-all.ps1       # Windows (PowerShell)
+```
+
+Ou passo a passo manual:
 
 ```bash
 # 1. Banco de dados
@@ -56,18 +75,19 @@ Dashboard em `http://localhost:5173`, API em `http://localhost:8000/docs`. Passo
 
 ```
 Sentinel/
-├── agent/                    # coleta métricas e envia ao backend
-│   ├── src/sentinel_agent/   # config, collectors, client, services, main
+├── agent/                     # coleta métricas e envia ao backend
+│   ├── src/sentinel_agent/    # config, collectors, client, services, main
 │   └── tests/
-├── backend/                  # API REST + persistência
-│   ├── app/                  # core, db, models, schemas, repositories, services, routers
-│   ├── alembic/               # migrations
+├── backend/                   # API REST + persistência
+│   ├── app/                   # core, db, models, schemas, repositories, services, routers
+│   ├── alembic/                # migrations
 │   └── tests/
-├── frontend/                  # dashboard web
-│   └── src/                  # api, hooks, components, pages, lib
-├── docs/                      # documentação (arquitetura, decisões, API, diagramas)
-├── docker-compose.yml         # PostgreSQL de desenvolvimento
-└── .github/workflows/ci.yml   # CI
+├── frontend/                   # dashboard web
+│   └── src/                   # api, hooks, components, pages, lib
+├── docs/                       # documentação (arquitetura, decisões, API, diagramas, banner)
+├── scripts/                    # setup.{sh,ps1}, run-all.{sh,ps1}
+├── docker-compose.yml          # PostgreSQL de desenvolvimento
+└── .github/workflows/ci.yml    # CI
 ```
 
 Cada aplicação tem seu próprio `README.md` com instruções de instalação e execução.
@@ -79,7 +99,7 @@ Cada aplicação tem seu próprio `README.md` com instruções de instalação e
 - [API](docs/api.md)
 - [Decisões técnicas](docs/decisions.md)
 - [Setup](docs/setup.md)
-- [Diagrama de fluxo](docs/diagrams/system-flow.md)
+- [Diagramas](docs/diagrams/)
 
 ## Qualidade
 
@@ -90,7 +110,7 @@ Cada aplicação tem seu próprio `README.md` com instruções de instalação e
 
 ## Screenshots
 
-Ainda não há screenshots publicadas — a interface pode ser vista rodando o projeto localmente (veja [Como executar](#como-executar)).
+Ainda não há screenshots publicadas nesta pasta — veja [`docs/screenshots/README.md`](docs/screenshots/README.md) para as instruções de quais telas capturar. Enquanto isso, a interface pode ser vista rodando o projeto localmente (veja [Como executar](#como-executar)).
 
 ## Roadmap
 
@@ -102,8 +122,13 @@ Ainda não há screenshots publicadas — a interface pode ser vista rodando o p
 | 3 | Sentinel Agent: coleta e envio periódico com retry/backoff | Concluída |
 | 4 | Integração: status online/offline, polling, busca/ordenação | Concluída |
 | 5 | Release Candidate 1.0: índice no banco, correção de corrida, logging, testes no frontend, README revisado | Concluída |
+| 6 | Portfólio: README profissional, diagramas Mermaid, scripts de onboarding, auditoria de organização | Concluída |
 
 Detalhes de cada fase: [`docs/roadmap.md`](docs/roadmap.md).
+
+## Como contribuir
+
+Contribuições são bem-vindas — bugs, testes, documentação e refino de UX existente, em especial. Veja [`CONTRIBUTING.md`](CONTRIBUTING.md) para como rodar o projeto, o checklist antes de abrir um PR e o padrão de commits.
 
 ## Licença
 

@@ -1,0 +1,19 @@
+flowchart TD
+    Start(["Início (main.py)"]) --> Register["ensure_registered<br/>(services/registration_service.py)"]
+    Register -->|"POST /computers"| Client1["SentinelApiClient<br/>(retry + backoff exponencial)"]
+    Client1 -->|"409: hostname já existe"| List["GET /computers<br/>localiza o id pelo hostname"]
+    Client1 -->|"sucesso (201)"| GotId["computer_id obtido"]
+    List --> GotId
+    Client1 -->|"falha persistente"| Wait["aguarda e tenta de novo<br/>(bloqueia até conseguir)"]
+    Wait --> Register
+
+    GotId --> Loop{"Loop principal"}
+    Loop --> Collect["collect_metrics<br/>(services/collection_service.py)"]
+    Collect --> Collectors["collectors/cpu, memory, disk<br/>(psutil)"]
+    Collectors --> Send["client.send_metric<br/>POST /computers/{id}/metrics"]
+    Send -->|"sucesso"| SleepOk["log + time.sleep(intervalo)"]
+    Send -->|"falha (rede ou 5xx esgotado)"| SleepErr["log do erro + time.sleep(intervalo)<br/>processo não derruba"]
+    SleepOk --> Loop
+    SleepErr --> Loop
+
+    Loop -->|"Ctrl+C"| Stop(["Encerra de forma limpa"])

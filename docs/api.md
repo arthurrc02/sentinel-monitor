@@ -2,6 +2,8 @@
 
 Base URL em desenvolvimento: `http://localhost:8000`. Documentação interativa automática (Swagger) em `/docs`.
 
+Sem autenticação — todos os endpoints são públicos nesta fase do projeto. CORS libera só a origem do frontend (`SENTINEL_CORS_ORIGINS`).
+
 ## Health
 
 ### `GET /health`

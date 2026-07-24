@@ -14,6 +14,8 @@ Fluxo de dados: **Agent → Backend (ingestão) → PostgreSQL → Backend (cons
 
 O PostgreSQL de desenvolvimento roda via `docker-compose.yml` na raiz do monorepo.
 
+Diagramas (Mermaid, `.mmd` + PNG renderizado) para a visão geral e o fluxo interno de cada aplicação: [`docs/diagrams/`](diagrams/).
+
 ## Backend
 
 Arquitetura em camadas:
@@ -62,7 +64,7 @@ Route (React Router) → Page → Hook (React Query, com polling) → api/ (fetc
 
 ## Agent
 
-Processo que roda na máquina monitorada: se registra no backend e envia métricas de CPU, memória e disco a cada `SENTINEL_COLLECTION_INTERVAL_SECONDS`. Execução síncrona (loop + `time.sleep`), sem `asyncio`. Ver diagrama de fluxo em [`docs/diagrams/system-flow.md`](diagrams/system-flow.md).
+Processo que roda na máquina monitorada: se registra no backend e envia métricas de CPU, memória e disco a cada `SENTINEL_COLLECTION_INTERVAL_SECONDS`. Execução síncrona (loop + `time.sleep`), sem `asyncio`. Ver diagrama de fluxo em [`docs/diagrams/agent-flow.mmd`](diagrams/agent-flow.mmd).
 
 ```
 main.py (orquestração)
