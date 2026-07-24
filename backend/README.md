@@ -2,7 +2,7 @@
 
 API responsável por receber métricas do Sentinel Agent, persisti-las (PostgreSQL) e disponibilizá-las para o frontend.
 
-> Status: Fase 4 concluída. Cadastro de computadores, ingestão/consulta de métricas e cálculo de status online/offline, com persistência em PostgreSQL via SQLAlchemy + Alembic.
+> Status: Fase 5 concluída (Release Candidate 1.0). Cadastro de computadores, ingestão/consulta de métricas e cálculo de status online/offline, com persistência em PostgreSQL via SQLAlchemy + Alembic, logging estruturado e tratamento de corrida no registro.
 
 ## Requisitos
 
@@ -72,7 +72,7 @@ curl -X POST http://localhost:8000/computers/1/metrics \
 curl http://localhost:8000/computers/1/metrics
 ```
 
-Registrar um `hostname` já existente retorna `409`; referenciar um computador inexistente em qualquer rota de métricas retorna `404`.
+`hostname` é normalizado (sem espaços nas pontas) antes de salvar. Registrar um `hostname` já existente retorna `409` (inclusive em corrida entre requisições simultâneas); referenciar um computador inexistente em qualquer rota de métricas retorna `404`.
 
 ## Lint e tipagem
 

@@ -53,7 +53,7 @@ def _register_with_retry(client: SentinelApiClient, hostname: str) -> int:
 def _collect_and_send(client: SentinelApiClient, computer_id: int) -> None:
     """Coleta e envia uma amostra; falhas aqui são logadas e não interrompem o loop."""
     try:
-        sample = collect_metrics()
+        sample = collect_metrics(settings.disk_path)
         client.send_metric(computer_id, sample)
         logger.info(
             "métrica enviada (cpu=%.1f%%, memory=%.1f%%, disk=%.1f%%)",

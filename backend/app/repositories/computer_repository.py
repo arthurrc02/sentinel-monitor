@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.computer import Computer
@@ -14,9 +15,14 @@ class ComputerRepository:
         self._db = db
 
     def create(self, hostname: str) -> Computer:
+        """Levanta `IntegrityError` se o hostname já existir (ex.: corrida entre requisições)."""
         computer = Computer(hostname=hostname)
         self._db.add(computer)
-        self._db.commit()
+        try:
+            self._db.commit()
+        except IntegrityError:
+            self._db.rollback()
+            raise
         self._db.refresh(computer)
         return computer
 

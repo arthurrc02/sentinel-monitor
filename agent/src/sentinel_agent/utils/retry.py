@@ -1,6 +1,9 @@
+import logging
 import time
 from collections.abc import Callable
 from typing import TypeVar
+
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -24,6 +27,14 @@ def with_retry(
         except Exception as exc:
             if attempt == max_attempts or not should_retry(exc):
                 raise
-            sleep(base_delay * (2 ** (attempt - 1)))
+            delay = base_delay * (2 ** (attempt - 1))
+            logger.warning(
+                "tentativa %s/%s falhou (%s), tentando novamente em %.1fs",
+                attempt,
+                max_attempts,
+                exc,
+                delay,
+            )
+            sleep(delay)
 
     raise AssertionError("with_retry requer max_attempts >= 1")

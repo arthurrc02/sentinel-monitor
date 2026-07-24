@@ -48,8 +48,8 @@ cp .env.example .env
 uv run sentinel-agent
 ```
 
-O agent se registra automaticamente e passa a enviar CPU/memória/disco a cada `SENTINEL_COLLECTION_INTERVAL_SECONDS` (padrão 60s). `Ctrl+C` encerra. Ver `agent/README.md` para as variáveis de ambiente disponíveis.
+O agent se registra automaticamente e passa a enviar CPU/memória/disco a cada `SENTINEL_COLLECTION_INTERVAL_SECONDS` (padrão 60s), do disco em `SENTINEL_DISK_PATH` (padrão `/`). `Ctrl+C` encerra. Ver `agent/README.md` para as variáveis de ambiente disponíveis.
 
 ## Qualidade
 
-Cada aplicação tem seus próprios comandos de lint/typecheck/teste — ver os `README.md` de `agent/`, `backend/` e `frontend/`. O CI (`.github/workflows/ci.yml`) roda todos eles a cada push/PR.
+Cada aplicação tem seus próprios comandos de lint/typecheck/teste — ver os `README.md` de `agent/`, `backend/` e `frontend/` (o frontend agora inclui `npm run test`, via Vitest). O CI (`.github/workflows/ci.yml`) roda todos eles a cada push/PR.

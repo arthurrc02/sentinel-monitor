@@ -73,3 +73,31 @@ Hook `usePollingInterval` (frontend), compartilhado entre `DashboardPage` e `Com
 ## Erros de rede do frontend viram `ApiError` amigável
 
 `api/client.ts` captura falha do `fetch` (backend inacessível) e lança uma `ApiError` com mensagem em português, em vez de propagar a mensagem crua do navegador (ex.: "Failed to fetch").
+
+## Colunas de data do backend viraram `DateTime(timezone=True)` explícito
+
+Durante a Fase 5, gerar uma migration nova revelou que o Postgres já guardava `computers.created_at`/`metrics.collected_at`/`metrics.created_at` como `TIMESTAMP WITH TIME ZONE` (a primeira migration, escrita à mão na Fase 1, já usava isso), mas os models SQLAlchemy nunca declararam `timezone=True` — o autogenerate ia "corrigir" isso silenciosamente removendo a informação de fuso do banco. Em vez de deixar isso acontecer, os models passaram a declarar `DateTime(timezone=True)` explicitamente, alinhados ao que já existia de fato.
+
+## Índice composto `(computer_id, collected_at)` em `metrics`
+
+Substitui o índice simples em `computer_id`. Cobre tanto consultas por computador (prefixo esquerdo) quanto o `MAX(collected_at) GROUP BY computer_id` do cálculo de status e o `ORDER BY collected_at DESC` do histórico — sem manter dois índices redundantes.
+
+## Corrida no registro de computador tratada como `IntegrityError` → `409`
+
+`POST /computers` fazia só um check-then-insert (`get_by_hostname` seguido de `create`), sem proteção contra duas requisições simultâneas com o mesmo hostname. O repositório agora captura `IntegrityError` do `commit()` (com rollback) e o service traduz para `ComputerAlreadyExistsError`, mantendo a resposta um `409` limpo em vez de um `500` cru.
+
+## Logging estruturado também no backend (paridade com o Agent)
+
+O Agent tinha logs JSON desde a Fase 3; o backend não tinha nenhum log de aplicação (só o access log do uvicorn). Reaproveitado o mesmo `JsonFormatter` do Agent (`app/core/logging_config.py`) para registrar eventos de negócio nos `services`.
+
+## `ruff` com `B` (bugbear) e `SIM` (simplify) em `backend/` e `agent/`
+
+Rede de segurança automática adicional além de `E`/`F`/`I`/`UP`. Nenhuma violação nova apareceu — confirma que o código já seguia essas práticas, mas fica garantido daqui para frente.
+
+## Vitest + Testing Library no frontend
+
+Até a Fase 4, o frontend era a única das três aplicações sem nenhum teste automatizado. Vitest foi escolhido por já compartilhar a configuração do Vite (`vite.config.ts`) sem infraestrutura nova; os testes cobrem lógica pura e componentes/hooks pequenos, não é tentativa de cobertura exaustiva. Vitest foi fixado na major 3 (não a 4) porque a 4 exige Vite 6+, e o projeto está em Vite 5 — misturar as duas trouxe uma versão de Vite duplicada na árvore de dependências que quebrava simulação de eventos em testes de componente.
+
+## `eslint-plugin-jsx-a11y` no frontend
+
+Acessibilidade vinha sendo revisada manualmente a cada fase; o plugin adiciona verificação automática nas revisões seguintes.

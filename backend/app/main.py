@@ -3,7 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.exception_handlers import register_exception_handlers
+from app.core.logging_config import configure_logging
 from app.routers import computers, health, metrics
+
+configure_logging(settings.log_level)
 
 app = FastAPI(title=settings.app_name, version=settings.version)
 

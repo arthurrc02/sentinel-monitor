@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     max_retry_attempts: int = 5
     retry_base_delay_seconds: float = 1.0
     log_level: str = "INFO"
+    disk_path: str = "/"
 
 
 settings = Settings()

@@ -6,11 +6,11 @@ from sentinel_agent.collectors.memory import collect_memory_percent
 from sentinel_agent.models.metric_sample import MetricSample
 
 
-def collect_metrics() -> MetricSample:
-    """Coleta uma amostra de CPU, memória e disco no instante atual."""
+def collect_metrics(disk_path: str) -> MetricSample:
+    """Coleta uma amostra de CPU, memória e disco (em `disk_path`) no instante atual."""
     return MetricSample(
         cpu_percent=collect_cpu_percent(),
         memory_percent=collect_memory_percent(),
-        disk_percent=collect_disk_percent(),
+        disk_percent=collect_disk_percent(disk_path),
         collected_at=datetime.now(UTC),
     )

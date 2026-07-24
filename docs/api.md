@@ -38,7 +38,9 @@ Registra um computador.
 }
 ```
 
-**Erros**: `409` se o `hostname` já estiver registrado.
+`hostname` é normalizado (espaços nas pontas removidos) antes de validar e salvar — `"pc-01 "` é tratado como `"pc-01"`.
+
+**Erros**: `409` se o `hostname` já estiver registrado (incluindo a corrida entre duas requisições simultâneas com o mesmo hostname). `422` se `hostname` ficar vazio após a normalização.
 
 ### `GET /computers`
 

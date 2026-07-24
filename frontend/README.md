@@ -2,7 +2,7 @@
 
 Dashboard web para visualização das métricas coletadas pelo Sentinel: lista de computadores registrados e histórico de métricas de cada um.
 
-> Status: Fase 4 concluída. Dashboard consumindo a API real (React Query) com atualização automática por polling, status online/offline, busca/ordenação e estados de carregamento/erro tratados.
+> Status: Fase 5 concluída (Release Candidate 1.0). Dashboard consumindo a API real (React Query) com atualização automática por polling, status online/offline, busca/ordenação e estados de carregamento/erro tratados. Testes automatizados com Vitest + Testing Library.
 
 ## Requisitos
 
@@ -51,9 +51,10 @@ src/
 
 O dashboard atualiza sozinho por polling — o intervalo é escolhido pelo usuário (seletor no topo de cada página) e persiste entre navegações via `localStorage`.
 
-## Lint e build
+## Lint, testes e build
 
 ```bash
 npm run lint
+npm run test
 npm run build
 ```

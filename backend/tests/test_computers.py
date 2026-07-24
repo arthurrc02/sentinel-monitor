@@ -13,6 +13,19 @@ def test_register_computer_returns_201(client: TestClient) -> None:
     assert "created_at" in body
 
 
+def test_register_computer_trims_hostname_whitespace(client: TestClient) -> None:
+    response = client.post("/computers", json={"hostname": "  pc-01  "})
+
+    assert response.status_code == 201
+    assert response.json()["hostname"] == "pc-01"
+
+
+def test_register_computer_rejects_whitespace_only_hostname(client: TestClient) -> None:
+    response = client.post("/computers", json={"hostname": "   "})
+
+    assert response.status_code == 422
+
+
 def test_register_duplicate_hostname_returns_409(client: TestClient) -> None:
     client.post("/computers", json={"hostname": "pc-01"})
 

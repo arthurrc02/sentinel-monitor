@@ -1,10 +1,15 @@
+import logging
 from datetime import UTC, datetime, timedelta
 from typing import NamedTuple
+
+from sqlalchemy.exc import IntegrityError
 
 from app.core.config import settings
 from app.core.exceptions import ComputerAlreadyExistsError
 from app.models.computer import Computer
 from app.repositories.computer_repository import ComputerRepository
+
+logger = logging.getLogger(__name__)
 
 
 class ComputerStatus(NamedTuple):
@@ -23,8 +28,17 @@ class ComputerService:
 
     def register(self, hostname: str) -> Computer:
         if self._computer_repository.get_by_hostname(hostname) is not None:
+            logger.info("tentativa de registrar hostname já existente: %s", hostname)
             raise ComputerAlreadyExistsError(hostname)
-        return self._computer_repository.create(hostname)
+        try:
+            computer = self._computer_repository.create(hostname)
+        except IntegrityError:
+            # Corrida entre requisições simultâneas com o mesmo hostname: o check acima
+            # passou para as duas, mas só uma consegue inserir; a outra vira 409 limpo.
+            logger.info("corrida ao registrar hostname já existente: %s", hostname)
+            raise ComputerAlreadyExistsError(hostname) from None
+        logger.info("computador registrado: id=%s hostname=%s", computer.id, hostname)
+        return computer
 
     def list_computers(self) -> list[ComputerStatus]:
         threshold = timedelta(seconds=settings.offline_threshold_seconds)

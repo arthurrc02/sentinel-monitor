@@ -2,7 +2,7 @@
 
 Agente que roda na máquina monitorada: se registra no backend do Sentinel e envia periodicamente métricas de CPU, memória e disco.
 
-> Status: Fase 3 concluída. Coleta e envio funcionais, com retry e backoff exponencial em falhas de rede/API.
+> Status: Fase 5 concluída (Release Candidate 1.0). Coleta e envio funcionais, com retry e backoff exponencial (logado a cada nova tentativa) em falhas de rede/API.
 
 ## Requisitos
 
@@ -33,6 +33,7 @@ Principais variáveis (todas opcionais, com valores padrão):
 | `SENTINEL_MAX_RETRY_ATTEMPTS` | `5` | Tentativas por requisição antes de desistir do ciclo atual. |
 | `SENTINEL_RETRY_BASE_DELAY_SECONDS` | `1` | Base do backoff exponencial entre tentativas. |
 | `SENTINEL_LOG_LEVEL` | `INFO` | Nível de log. |
+| `SENTINEL_DISK_PATH` | `/` | Caminho cujo uso de disco é monitorado. |
 
 ## Execução
 
